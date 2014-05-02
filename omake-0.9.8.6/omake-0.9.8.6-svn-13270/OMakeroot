@@ -1,3 +1,6 @@
+OSTYPE = Win32
+export
+
 #
 # We want the ocamldep-omake to be accessible through the standard path.
 #

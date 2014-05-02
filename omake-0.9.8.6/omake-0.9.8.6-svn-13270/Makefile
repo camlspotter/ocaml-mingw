@@ -18,8 +18,8 @@ default:
 	@exit 1
 
 bootstrap: boot/Makefile
-	@cd boot; $(MAKE) Makefile.dep; $(MAKE) omake
-	@ln -sf boot/omake omake-boot
+	@cd boot; $(MAKE) Makefile.dep; $(MAKE) omake.exe
+	@ln -sf boot/omake.exe omake-boot.exe
 
 boot/Makefile: src/Makefile
 	mkdir -p boot

@@ -34,8 +34,6 @@
 #ifdef WIN32
 #ifdef FAM_ENABLED
 
-/* Disable some of the warnings */
-#pragma warning( disable : 4127 4996 )
 
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0400

@@ -38,17 +38,24 @@
 #include <caml/fail.h>
 #include <caml/custom.h>
 
-#if defined(WIN32) || defined(_WIN32)
-/* Disable some of the warnings */
-#pragma warning( disable : 4146 )
-#endif
-
 extern char *caml_young_start, *caml_young_ptr, *caml_young_limit, *caml_young_end;
 
 static char *null = 0;
 
 #undef abort
 #define abort()    (*null = 0)
+
+#ifdef _WIN64
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
+#define P_LD  PRId64
+#define P_LX  PRIx64
+#define P_LUD PRIu64
+#else
+#define P_LD  "ld"
+#define P_LX  "lx"
+#define P_LUD "lud"
+#endif
 
 static void search_pointer(char **pointers, char *name, unsigned bound, char *p, char *v, unsigned index)
 {
@@ -67,14 +74,14 @@ static void search_pointer(char **pointers, char *name, unsigned bound, char *p,
     }
     p2 = pointers[i];
     if((p2 != p) && (Tag_val(p) != Infix_tag)) {
-        fprintf(stderr, "%s: illegal pointer: 0x%08lx < 0x%08lx < 0x%08lx, size = %lud, tag = %d\n", 
+        fprintf(stderr, "%s: illegal pointer: 0x%08" P_LX " < 0x%08" P_LX " < 0x%08"P_LX", size = %" P_LUD ", tag = %d\n", 
                 name,
-                (unsigned long) p2, (unsigned long) p, (unsigned long) pointers[i + 1],
+                (uintnat) p2, (uintnat) p, (uintnat) pointers[i + 1],
                 Wosize_val(p), Tag_val(p));
-        fprintf(stderr, "points into: 0x%08lx: index = %d, size = %lud, tag = %d\n",
-                (unsigned long) p2, i, Wosize_val(p2), Tag_val(p2));
-        fprintf(stderr, "from block: 0x%08lx: size = %lud, tag = %d, field = %d\n",
-                (unsigned long) v, Wosize_val(v), Tag_val(v), index);
+        fprintf(stderr, "points into: 0x%08"P_LX": index = %d, size = %"P_LUD", tag = %d\n",
+                (uintnat) p2, i, Wosize_val(p2), Tag_val(p2));
+        fprintf(stderr, "from block: 0x%08"P_LX": size = %"P_LUD", tag = %d, field = %d\n",
+                (uintnat) v, Wosize_val(v), Tag_val(v), index);
         fflush(stderr);
         abort();
     }
@@ -93,15 +100,15 @@ static void lm_heap_check_aux1(char *name)
     ptr = caml_young_ptr;
     end = caml_young_end;
 
-    fprintf(stderr, "AAA: %s: [0x%08lx, 0x%08lx, 0x%08lx, 0x%08lx] (%ld/%ld/%ld bytes)\n",
+    fprintf(stderr, "AAA: %s: [0x%08"P_LX", 0x%08"P_LX", 0x%08"P_LX", 0x%08"P_LX"] (%"P_LD"/%"P_LD"/%"P_LD" bytes)\n",
             name,
-            (unsigned long) caml_young_start,
-            (unsigned long) caml_young_ptr,
-            (unsigned long) caml_young_limit,
-            (unsigned long) caml_young_end, 
-            ((unsigned long) caml_young_end) - (unsigned long) caml_young_ptr,
-            ((unsigned long) caml_young_end) - (unsigned long) caml_young_limit,
-            ((unsigned long) caml_young_end) - (unsigned long) caml_young_start);
+            (uintnat) caml_young_start,
+            (uintnat) caml_young_ptr,
+            (uintnat) caml_young_limit,
+            (uintnat) caml_young_end, 
+            ((uintnat) caml_young_end) - (uintnat) caml_young_ptr,
+            ((uintnat) caml_young_end) - (uintnat) caml_young_limit,
+            ((uintnat) caml_young_end) - (uintnat) caml_young_start);
     fflush(stderr);
 
     /*
@@ -112,8 +119,8 @@ static void lm_heap_check_aux1(char *name)
     while(v < caml_young_end) {
         pointers[index++] = (char *) v;
         size = Wosize_val(v);
-        fprintf(stderr, "%s: 0x%08lx: size %lud, tag = %d\n",
-                name, (unsigned long) v, size, Tag_val(v));
+        fprintf(stderr, "%s: 0x%08"P_LX": size %"P_LUD", tag = %d\n",
+                name, (uintnat) v, size, Tag_val(v));
         found = 0;
         for(i = 0; i != 10; i++) {
             next = &Field(v, size + i);
@@ -121,12 +128,12 @@ static void lm_heap_check_aux1(char *name)
                 p = *next;
 #define Debug_free_minor 0xD700D6D7ul
                 if(p == Debug_free_minor) {
-                    fprintf(stderr, "\tnext[%d]:0x%08lx = 0x%08lx\n", i, (unsigned long) next, (unsigned long) p);
+                    fprintf(stderr, "\tnext[%d]:0x%08"P_LX" = 0x%08"P_LX"\n", i, (uintnat) next, (uintnat) p);
                     found = 1;
                 }
                 else if(found)
-                    fprintf(stderr, "\tnext[%d]:0x%08lx = 0x%08lx, size = %lud, tag = %d\n",
-                            i, (unsigned long) next, (unsigned long) p, Wosize_hd(p), Tag_hd(p));
+                    fprintf(stderr, "\tnext[%d]:0x%08"P_LX" = 0x%08"P_LX", size = %"P_LUD", tag = %d\n",
+                            i, (uintnat) next, (uintnat) p, Wosize_hd(p), Tag_hd(p));
             }
         }
         fflush(stderr);
@@ -146,7 +153,7 @@ static void lm_heap_check_aux1(char *name)
     while(v < caml_young_end) {
         size = Wosize_val(v);
         if(Tag_val(v) < No_scan_tag) {
-            fprintf(stderr, "%s: scanning 0x%08lx: size %lud, tag = %d\n", name, (unsigned long) v, size, Tag_val(v));
+            fprintf(stderr, "%s: scanning 0x%08"P_LX": size %"P_LUD", tag = %d\n", name, (uintnat) v, size, Tag_val(v));
             fflush(stderr);
             for(i = 0; i != size; i++) {
                 char *p = (char *) Field(v, i);
@@ -177,15 +184,15 @@ static void lm_heap_check_aux2(char *name)
     ptr = caml_young_ptr;
     end = caml_young_end;
 
-    fprintf(stderr, "AAA: %s: [0x%08lx, 0x%08lx, 0x%08lx, 0x%08lx] (%ld/%ld/%ld bytes)\n",
+    fprintf(stderr, "AAA: %s: [0x%08"P_LX", 0x%08"P_LX", 0x%08"P_LX", 0x%08"P_LX"] (%"P_LD"/%"P_LD"/%"P_LD" bytes)\n",
             name,
-            (unsigned long) caml_young_start,
-            (unsigned long) caml_young_ptr,
-            (unsigned long) caml_young_limit,
-            (unsigned long) caml_young_end, 
-            ((unsigned long) caml_young_end) - (unsigned long) caml_young_ptr,
-            ((unsigned long) caml_young_end) - (unsigned long) caml_young_limit,
-            ((unsigned long) caml_young_end) - (unsigned long) caml_young_start);
+            (uintnat) caml_young_start,
+            (uintnat) caml_young_ptr,
+            (uintnat) caml_young_limit,
+            (uintnat) caml_young_end, 
+            ((uintnat) caml_young_end) - (uintnat) caml_young_ptr,
+            ((uintnat) caml_young_end) - (uintnat) caml_young_limit,
+            ((uintnat) caml_young_end) - (uintnat) caml_young_start);
 
     fflush(stderr);
 
@@ -196,7 +203,7 @@ static void lm_heap_check_aux2(char *name)
     while(v < caml_young_end) {
         hd = Hd_val(v);
         if(hd == Debug_free_minor) {
-            fprintf(stderr, "Bogus pointer: 0x%08lx\n", (unsigned long) v);
+            fprintf(stderr, "Bogus pointer: 0x%08"P_LX"\n", (uintnat) v);
             fflush(stderr);
             v += sizeof(header_t);
         }
@@ -205,8 +212,8 @@ static void lm_heap_check_aux2(char *name)
             for(i = 0; i != size; i++) {
                 char *p = (char *) Field(v, i);
                 if(p >= caml_young_end && p < caml_young_ptr) {
-                    fprintf(stderr, "%s: Found a bogus pointer: 0x%08lx[%d] = 0x%08lx\n",
-                            name, (unsigned long) v, i, (unsigned long) p);
+                    fprintf(stderr, "%s: Found a bogus pointer: 0x%08"P_LX"[%d] = 0x%08"P_LX"\n",
+                            name, (uintnat) v, i, (uintnat) p);
                     fflush(stderr);
                     abort();
                 }

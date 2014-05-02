@@ -41,8 +41,6 @@
 
 #ifdef WIN32 
 #include <windows.h>
-/* Disable some of the warnings */
-#pragma warning( disable : 4100 4189 4127 4702 4996 )
 #endif /* WIN32 */
 
 #ifdef FAM_PSEUDO
@@ -53,6 +51,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/select.h>
+#include <sys/string.h>
 #endif /* FAM_PSEUDO */
 
 /*
@@ -84,6 +83,22 @@ typedef struct {
      }                                       \
   } while(0)
 
+
+#define CheckCodeClean(fmt, expr,clean)         \
+    do {                                        \
+        caml_enter_blocking_section();          \
+        code = expr;                            \
+        caml_leave_blocking_section();          \
+        clean ;                                 \
+        if(code < 0) {                          \
+            char buffer[256];                   \
+            ErrFmt(buffer, fmt);                \
+            caml_failwith(buffer);              \
+        }                                       \
+    } while(0)
+
+
+
 static int fam_connection_compare(value v1, value v2)
 {
     FAMConnection *info1 = FAMConnection_val(v1);
@@ -96,9 +111,9 @@ static int fam_connection_compare(value v1, value v2)
 #endif /* !FAM_PSEUDO */
 }
 
-static long fam_connection_hash(value v)
+static intnat fam_connection_hash(value v)
 {
-    return (long) FAMConnection_val(v);
+    return (intnat) FAMConnection_val(v);
 }
 
 static void fam_connection_finalize(value v_info)
@@ -108,9 +123,10 @@ static void fam_connection_finalize(value v_info)
     info = FAMInfo_val(v_info);
     if(info->is_open) {
         int code;
-        CheckCode("om_notify_close", FAMClose(info->fc));
-        free(info->fc);
+        FAMConnection *fc = info->fc;
         info->is_open = 0;
+        FAMClose(fc);
+        free(fc);
     }
 }
 
@@ -197,23 +213,27 @@ value om_notify_fd(value v_fc)
 value om_notify_monitor_directory(value v_fc, value v_name, value v_recursive)
 {
     CAMLparam3(v_fc, v_name, v_recursive);
-    const char *name;
+    char *name;
     FAMConnection *fc;
     FAMRequest request;
     int code, recursive;
 
     fc = FAMConnection_val(v_fc);
-    name = String_val(v_name);
+    name = strdup(String_val(v_name));
+    if ( name == NULL ){
+        caml_raise_out_of_memory();
+    }
     recursive = Int_val(v_recursive);
     if(recursive) {
 #ifdef WIN32
-        CheckCode("om_notify_monitor_directory", FAMMonitorDirectoryTree(fc, name, &request, 0));
+        CheckCodeClean("om_notify_monitor_directory", FAMMonitorDirectoryTree(fc, name, &request, 0),free(name));
 #else /* WIN32 */
         caml_failwith("om_notify_monitor_directory: recursive monitoring is not allowed");
 #endif /* !WIN32 */
     }
-    else
-        CheckCode("om_notify_monitor_directory", FAMMonitorDirectory(fc, name, &request, 0));
+    else {
+        CheckCodeClean("om_notify_monitor_directory", FAMMonitorDirectory(fc, name, &request, 0),free(name));
+    }
     CAMLreturn(Val_int(request.reqnum));
 }
 

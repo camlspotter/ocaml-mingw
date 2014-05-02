@@ -22,22 +22,22 @@
  * Authors: Jason Hickey <jyh@cs.caltech.edu>
  *          Aleksey Nogin <nogin@cs.cornell.edu>
  */
+#include <caml/mlvalues.h>
+#include <caml/alloc.h>
+#include <caml/memory.h>
+#include <caml/fail.h>
+
 #include <stdio.h>
 #if defined(__CYGWIN__) || defined(__svr4__)
 #   include <sys/termios.h>
 #endif
 #ifdef WIN32
-#   include <Windows.h>
-#   pragma warning (disable: 4127 4189 4702)
+#   include "unixsupport.h"
+#   include <windows.h>
 #else
 #   include <unistd.h>
 #   include <sys/ioctl.h>
 #endif
-
-#include <caml/mlvalues.h>
-#include <caml/alloc.h>
-#include <caml/memory.h>
-#include <caml/fail.h>
 
 value caml_term_size(value arg)
 {

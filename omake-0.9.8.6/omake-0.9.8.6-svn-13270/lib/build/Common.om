@@ -115,10 +115,10 @@ if $(equal $(OSTYPE), Win32)
     #
     # Common suffixes for files
     #
-    EXT_LIB = .lib
+    EXT_LIB = .a
     EXT_DLL = .dll
-    EXT_OBJ = .obj
-    EXT_ASM = .asm
+    EXT_OBJ = .o
+    EXT_ASM = .s
     EXE = .exe
 
     export

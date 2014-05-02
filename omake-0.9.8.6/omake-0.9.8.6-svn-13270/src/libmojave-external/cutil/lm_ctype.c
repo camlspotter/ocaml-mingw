@@ -40,8 +40,6 @@
 
 #ifdef WIN32 
 #include <windows.h>
-/* Disable some of the warnings */
-#pragma warning( disable : 4100 )
 #endif /* WIN32 */
 
 /*

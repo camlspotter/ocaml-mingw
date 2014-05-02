@@ -8,7 +8,6 @@
 #include <caml/memory.h>
 
 #ifdef WIN32
-#   pragma warning (disable: 4127 4189 4702 4996)
 #endif
 
 #ifdef NCURSES

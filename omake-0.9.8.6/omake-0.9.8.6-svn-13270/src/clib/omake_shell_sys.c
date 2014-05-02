@@ -38,13 +38,14 @@
 #ifdef WIN32
 #include <caml/signals.h>
 
-/* Disable some of the warnings */
-#pragma warning( disable : 4127 4189 4702 4706 4996 )
-
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
+#ifdef _WIN64
+#define _WIN32_WINNT  0x0502
+#else
+#define _WIN32_WINNT  0x0501
 #endif
-
+#endif
+#include <winsock2.h>
 #include <windows.h>
 #include <tlhelp32.h>
 #include <winsock.h>
@@ -1092,7 +1093,7 @@ static BOOL WINAPI console_ctrl_handler(DWORD code)
         ExitProcess(1);
         break;
     default:
-        fprintf(stderr, "console_ctrl_handler: unknown code: %d\n", code);
+        fprintf(stderr, "console_ctrl_handler: unknown code: %d\n", (int)code);
         fflush(stderr);
         rval = FALSE;
         break;

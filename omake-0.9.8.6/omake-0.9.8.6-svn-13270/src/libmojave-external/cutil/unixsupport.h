@@ -33,24 +33,8 @@
 #define _UNIXSUPPORT_H
 
 #ifdef WIN32
-
-/*
- * HACK: this gets the handle from a file_descr.
- * This depends on the OCaml implementation, but
- * it is unlikely to change.
- */
-struct filedescr {
-    union {
-        HANDLE handle;
-        SOCKET socket;
-    } fd;
-    enum { KIND_HANDLE, KIND_SOCKET } kind;
-    int crt_fd;
-};
-
-#define Handle_val(v)           (((struct filedescr *) Data_custom_val(v))->fd.handle)
-#define Socket_val(v)           (((struct filedescr *) Data_custom_val(v))->fd.socket)
-#define Descr_kind_val(v)       (((struct filedescr *) Data_custom_val(v))->kind)
+#include <winsock2.h>
+#include <caml/unixsupport.h>
 
 #else /* !WIN32 */
 

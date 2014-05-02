@@ -38,8 +38,7 @@
 #include <caml/fail.h>
 
 #if defined(WIN32) || defined(_WIN32)
-/* Disable some of the warnings */
-#pragma warning( disable : 4100 4201 4127 4189 4702 4716 4996 )
+#include "unixsupport.h"
 #endif
 
 /*
@@ -53,6 +52,16 @@
 
 #define FLOCK_LEN       ((unsigned int) ~0 >> 2)
 
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
+
+#if SIZEOF_PTR == 8
+#define P_LX  PRIx64
+#else
+#define P_LX  PRIx32
+#endif 
+
+
 /*
  * Print the stack pointer for debugging.
  */
@@ -60,7 +69,7 @@ value lm_print_stack_pointer(value v_arg)
 {
     int sp;
 
-    fprintf(stderr, "Stack pointer: 0x%08lx\n", (unsigned long) &sp);
+    fprintf(stderr, "Stack pointer: 0x%08" P_LX "\n", (intnat) &sp);
     return Val_unit;
 }
 
@@ -75,7 +84,7 @@ value lm_print_stack_pointer(value v_arg)
  */
 value int_of_fd(value fd)
 {
-    return Val_long((long) *(HANDLE *)Data_custom_val(fd));
+  return fd;
 }
 
 /*
@@ -184,7 +193,7 @@ value lockf_win32(value v_fd, value v_kind, value v_len)
                     (LPTSTR) &lpMsgBuf,
                     0, NULL);
 
-                sprintf(szBuf, "lockf_win32 failed with error %d: %s", error, lpMsgBuf); 
+		sprintf(szBuf, "lockf_win32 failed with error %d: %s", (int)error, (char*)lpMsgBuf);
                 LocalFree(lpMsgBuf);
 
                 caml_failwith(szBuf);
@@ -222,7 +231,7 @@ value lm_flock(value v_fd, value v_op)
  */
 value ftruncate_win32(value v_fd)
 {
-    HANDLE fd = *(HANDLE *)Data_custom_val(v_fd);
+    HANDLE fd = Handle_val(v_fd);
     SetEndOfFile(fd);
     return Val_unit;
 }

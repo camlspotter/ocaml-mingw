@@ -271,7 +271,7 @@ let omake_magic buf =
       fprintf buf "let cache_magic = \"%s\"\n" (digest_files ".cache.magic" ".odb" !cache_files);
       fprintf buf "let ir_magic = \"%s\"\n"    (digest_files ".omc.magic" ".omc" !omc_files);
       fprintf buf "let obj_magic = \"%s\"\n"   (digest_files ".omo.magic" ".omo" !omo_files);
-      fprintf buf "let lib_dir = \"%s\"\n" (String.escaped libdir);
+      fprintf buf "let lib_dir = Filename.concat (Filename.dirname (Filename.dirname Sys.executable_name)) (Filename.concat \"lib\" \"omake\") ;;\n";
       fprintf buf "let version = \"%s\"\n" (String.escaped (shorten_version version));
       fprintf buf "let version_message = \"OMake %s:\\n\\tbuild [%s %s %d %02d:%02d:%02d %d]\\n\\ton %s\"\n"
          (String.escaped version)
@@ -282,7 +282,7 @@ let omake_magic buf =
          min
          sec
          (year + 1900)
-         (String.escaped (Unix.gethostname ()));
+         (String.escaped "localhost");
       flush buf
 
 (************************************************************************

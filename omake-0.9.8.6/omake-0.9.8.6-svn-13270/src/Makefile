@@ -7,32 +7,34 @@
 #
 # System config
 #
-LN = ln -sf
+LN = cp
 RM = rm -f
 DOT = ./
 slash = /
 
-win32 = unix
-system = null
+win32 = win32
+system = system
 
 #
 # C configuration
 #
-CC = cc
-CFLAGS =
-AR = ar cq
+CC := $(CC)
+CFLAGS = -DWIN32 -DFAM_ENABLED -DFAM_PSEUDO -Wno-strict-aliasing -Wall -mms-bitfields
+AR := $(AR) cq
 AROUT =
 EXT_OBJ = .o
 EXT_LIB = .a
-EXE =
+EXE = .exe
 
-OCAMLFLAGS = -g
-THREADSLIB =
+OCAMLFLAGS = -g -thread
+THREADSLIB = threads.cma
+OCAMLCWHERE=$(shell ocamlc -where | tr -d '\r')
+
 
 .SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o
 
 .c.o:
-	$(CC) $(CFLAGS) -I"`ocamlc -where`" -c $*.c
+	$(CC) $(CFLAGS) -I"$(OCAMLCWHERE)" -c $*.c
 
 
 #

@@ -36,6 +36,8 @@
 #include <caml/custom.h>
 #include <caml/callback.h>
 
+#include <ctype.h>
+
 /*
  * XXX: HACK (nogin 02/28/07):
  * CAMLreturn with non-value types is wrong in 3.09.3 and later; CAMLreturnT was added in 3.09.4 and
@@ -52,8 +54,6 @@
 #ifdef WIN32
 #  include <caml/signals.h>
 #  include <windows.h>
-   /* Disable some of the warnings */
-#  pragma warning( disable : 4100 4127 4505 4702 4996 4189)
 #else
 #  include <unistd.h>
 #  include <string.h>

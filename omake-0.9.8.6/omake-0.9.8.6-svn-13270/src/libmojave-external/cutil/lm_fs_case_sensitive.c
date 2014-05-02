@@ -48,6 +48,7 @@
 /* Other various includes */
 #include <memory.h>
 #include <errno.h>
+#include <string.h>
 
 typedef struct vol_caps_buf {
     unsigned long size;
@@ -66,13 +67,21 @@ value lm_fs_case_sensitive_available(value _unit) {
 value lm_fs_case_sensitive(value path_val) {
     CAMLparam1(path_val);
     struct statfs stat;
-    char *path = String_val(path_val);
+    char *path ;
+    char *p = String_val(path_val);
+    size_t len = strlen (p) + 1;
+    path=malloc(len);
+    if ( path == NULL )
+      caml_raise_out_of_memory ();
+    memcpy(path,p,len);
     
     do {
+        int erg;
         caml_enter_blocking_section();
-        if (statfs(path, &stat))
-            break;
-        
+        erg = statfs(path, &stat);
+        free(path);
+        if ( erg )
+          break;
         struct attrlist alist;
         memset(&alist, 0, sizeof(alist));
         alist.bitmapcount = ATTR_BIT_MAP_COUNT;
@@ -105,9 +114,6 @@ value lm_fs_case_sensitive(value path_val) {
 
 #else /* not DETECT_FS_CASE_SENSITIVE_GETATTRLIST */
 
-#ifdef _WIN32
-#pragma warning( disable : 4100 )
-#endif /* _WIN32 */
 
 value lm_fs_case_sensitive_available(value _unit) {
     return Val_false;

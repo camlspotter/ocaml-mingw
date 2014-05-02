@@ -58,7 +58,7 @@ all: cvs_realclean$(EXE) omake$(EXE) osh$(EXE)
 #
 install: cvs_realclean$(EXE) omake$(EXE) osh$(EXE)
     mkdir -p $(INSTALL_BINDIR)
-    cp -f -m 555 cvs_realclean$(EXE) omake$(EXE) $(INSTALL_BINDIR)/
+    cp -f -m 755 cvs_realclean$(EXE) omake$(EXE) $(INSTALL_BINDIR)/
     ln-or-cp $(INSTALL_BINDIR)/omake$(EXE) $(INSTALL_BINDIR)/osh$(EXE)
 
 clean:
