@@ -16,7 +16,7 @@ let input_line ch =
 let process_entry str =
   (* non-zero length because of Str.split *)
   if str.[0] <> '\\' then begin
-    Printf.eprintf "CANNOT HANDLE THIS: %s\n%!" str;
+    Printf.eprintf "mmtranslate: CANNOT HANDLE THIS: %s\n%!" str;
     str
   end else
     str
