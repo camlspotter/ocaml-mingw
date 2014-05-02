@@ -18,8 +18,10 @@ system = system
 #
 # C configuration
 #
-CC := $(CC)
+# CC := $(CC)
+CC=i686-w64-mingw32-gcc
 CFLAGS = -DWIN32 -DFAM_ENABLED -DFAM_PSEUDO -Wno-strict-aliasing -Wall -mms-bitfields
+AR=i686-w64-mingw32-ar
 AR := $(AR) cq
 AROUT =
 EXT_OBJ = .o
