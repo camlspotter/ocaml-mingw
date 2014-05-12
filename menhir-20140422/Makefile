@@ -45,8 +45,8 @@ OBJ          := o
 # LIBSUFFIX    := a
 endif
 
-# Mingw fix
-MENHIREXE := menhir.exe
+# Quick fix for mingw
+MENHIREXE    := menhir.exe
 
 # ----------------------------------------------------------------------------
 # Installation paths.
