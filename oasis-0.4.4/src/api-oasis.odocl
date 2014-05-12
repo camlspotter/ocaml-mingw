@@ -1,0 +1,84 @@
+################################################################################
+#  OASIS: architecture for building OCaml libraries and applications           #
+#                                                                              #
+#  Copyright (C) 2011-2013, Sylvain Le Gall                                    #
+#  Copyright (C) 2008-2011, OCamlCore SARL                                     #
+#                                                                              #
+#  This library is free software; you can redistribute it and/or modify it     #
+#  under the terms of the GNU Lesser General Public License as published by    #
+#  the Free Software Foundation; either version 2.1 of the License, or (at     #
+#  your option) any later version, with the OCaml static compilation           #
+#  exception.                                                                  #
+#                                                                              #
+#  This library is distributed in the hope that it will be useful, but         #
+#  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  #
+#  or FITNESS FOR A PARTICULAR PURPOSE. See the file COPYING for more          #
+#  details.                                                                    #
+#                                                                              #
+#  You should have received a copy of the GNU Lesser General Public License    #
+#  along with this library; if not, write to the Free Software Foundation,     #
+#  Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA               #
+################################################################################
+
+# OASIS_START
+# DO NOT EDIT (digest: 1f72f17551ed9241b5c309db1dbad600)
+oasis/FormatExt
+oasis/ODNFunc
+oasis/PropList
+oasis/OASISUtils
+oasis/OASISUnixPath
+oasis/OASISContext
+oasis/OASISGettext
+oasis/OASISMessage
+oasis/OASISText
+oasis/OASISTypes
+oasis/OASISParse
+oasis/OASISValues
+oasis/OASISExpr
+oasis/OASISVersion
+oasis/OASISLicense
+oasis/OASISFileTemplate
+oasis/OASISBuildSection
+oasis/OASISDocument
+oasis/OASISExecutable
+oasis/OASISFlag
+oasis/OASISSetupUpdate
+oasis/OASISLibrary
+oasis/OASISObject
+oasis/OASISPackage
+oasis/OASISSourceRepository
+oasis/OASISTest
+oasis/OASISPlugin
+oasis/OASISFindlib
+oasis/OASISSchema
+oasis/OASISSection
+oasis/OASISData
+oasis/OASISString
+oasis/OASISExec
+oasis/OASISFileUtil
+oasis/OASISHostPath
+oasis/OASISGraph
+oasis/OASISFeatures
+base/BaseArgExt
+base/BaseBuilt
+base/BaseCheck
+base/BaseCustom
+base/BaseData
+base/BaseDoc
+base/BaseEnvLight
+base/BaseEnv
+base/BaseFileAB
+base/BaseGenerate
+base/BaseLog
+base/BaseOCamlcConfig
+base/BaseSetup
+base/BaseStandardVar
+base/BaseTest
+base/BaseDynVar
+base/BaseMessage
+base/BaseContext
+cli/CLISubCommand
+cli/CLIArgExt
+cli/CLICommon
+cli/CLIPager
+# OASIS_STOP

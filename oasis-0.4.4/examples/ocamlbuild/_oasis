@@ -1,0 +1,15 @@
+Name: object
+Version: 0.0.1
+OASISFormat: 0.4
+AlphaFeatures: ocamlbuild_more_args
+Authors: Jacques-Pascal Deplaix
+License: LGPL with OCaml linking exception
+Synopsis: Example for ocamlbuild fields
+BuildTools: ocamlbuild
+XOCamlbuildPluginTags: package(odn.with.syntax), syntax(camlp4o)
+XOCamlbuildExtraArgs: -j 4 -verbose 0
+OCamlVersion: >= 4.01
+
+Library test
+  Path: src
+  Modules: Test

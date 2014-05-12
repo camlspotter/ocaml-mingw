@@ -1,0 +1,75 @@
+################################################################################
+#  OASIS: architecture for building OCaml libraries and applications           #
+#                                                                              #
+#  Copyright (C) 2011-2013, Sylvain Le Gall                                    #
+#  Copyright (C) 2008-2011, OCamlCore SARL                                     #
+#                                                                              #
+#  This library is free software; you can redistribute it and/or modify it     #
+#  under the terms of the GNU Lesser General Public License as published by    #
+#  the Free Software Foundation; either version 2.1 of the License, or (at     #
+#  your option) any later version, with the OCaml static compilation           #
+#  exception.                                                                  #
+#                                                                              #
+#  This library is distributed in the hope that it will be useful, but         #
+#  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  #
+#  or FITNESS FOR A PARTICULAR PURPOSE. See the file COPYING for more          #
+#  details.                                                                    #
+#                                                                              #
+#  You should have received a copy of the GNU Lesser General Public License    #
+#  along with this library; if not, write to the Free Software Foundation,     #
+#  Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA               #
+################################################################################
+
+# OASIS_START
+# DO NOT EDIT (digest: 050043f65990987fd8dfb36bbab063f3)
+version = "0.4.4"
+description = "_oasis file functions"
+requires = "unix odn"
+archive(byte) = "oasis.cma"
+archive(byte, plugin) = "oasis.cma"
+archive(native) = "oasis.cmxa"
+archive(native, plugin) = "oasis.cmxs"
+exists_if = "oasis.cma"
+package "dynrun" (
+ version = "0.4.4"
+ description = "_oasis file functions"
+ requires = "oasis.base oasis.builtin-plugins"
+ archive(byte) = "dynrun.cma"
+ archive(byte, plugin) = "dynrun.cma"
+ archive(native) = "dynrun.cmxa"
+ archive(native, plugin) = "dynrun.cmxs"
+ exists_if = "dynrun.cma"
+)
+
+package "cli" (
+ version = "0.4.4"
+ description = "'setup.ml' modules for OASIS"
+ requires = "oasis oasis.base plugin-loader"
+ archive(byte) = "cli.cma"
+ archive(byte, plugin) = "cli.cma"
+ exists_if = "cli.cma"
+)
+
+package "builtin-plugins" (
+ version = "0.4.4"
+ description = "_oasis file functions"
+ requires = "oasis oasis.base ocamlbuild"
+ archive(byte) = "builtin-plugins.cma"
+ archive(byte, plugin) = "builtin-plugins.cma"
+ archive(native) = "builtin-plugins.cmxa"
+ archive(native, plugin) = "builtin-plugins.cmxs"
+ exists_if = "builtin-plugins.cma"
+)
+
+package "base" (
+ version = "0.4.4"
+ description = "'setup.ml' modules for OASIS"
+ requires = "oasis"
+ archive(byte) = "base.cma"
+ archive(byte, plugin) = "base.cma"
+ archive(native) = "base.cmxa"
+ archive(native, plugin) = "base.cmxs"
+ exists_if = "base.cma"
+)
+# OASIS_STOP
+
