@@ -93,7 +93,9 @@ let before_space s =
   with Not_found -> s
 
 (* ocamlfind command *)
-let ocamlfind x = S[Sh (exec_from_conf "ocamlfind"); x]
+let ocamlfind x = S[Sh (
+  Ocamlbuild_pack.Shell.quote_filename_if_needed
+    (exec_from_conf "ocamlfind") ); x]
 
 (* This lists all supported packages. *)
 let find_packages () =

@@ -88,9 +88,27 @@ let lookup_plugin_section plugin action nm lst =
 
 let configure t args =
   (* Run configure *)
+
+  (* use-bash is an exception. It's already needed to run the
+     pre-configure script. *)
+  let rec f = function
+    | [] ->
+      begin
+        try
+          let x = Sys.getenv "USE_BASH" in
+            OASISHostPath.bash_cmd := (fun () -> x);
+        with
+          _ -> ()
+      end
+    | "--use-bash"::x::_ ->
+        OASISHostPath.bash_cmd := (fun () -> x);
+    | _::tl -> f tl
+  in
+    f (Array.to_list args);
   BaseCustom.hook
     t.package.conf_custom
     (fun () ->
+         OASISHostPath.bash_cmd := BaseStandardVar.bash_cmd;
        (* Reload if preconf has changed it *)
        begin
          try
