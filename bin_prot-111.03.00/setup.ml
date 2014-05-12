@@ -2677,7 +2677,7 @@ module OASISFileUtil = struct
   let mkdir ~ctxt tgt =
     OASISExec.run ~ctxt
       (match Sys.os_type with
-         | "Win32" -> "md"
+         | "Win32" -> "mkdir"
          | _ -> "mkdir")
       [q tgt]
 
@@ -6780,7 +6780,7 @@ let setup_t =
                post_command =
                  [
                     (OASISExpr.EBool true,
-                      Some (("config/arch.sh", ["$ocamlc"])))
+                      Some (("c:/cygwin/bin/sh.exe", ["config/arch.sh"; "$ocamlc"])))
                  ]
             };
           build_type = (`Build, "ocamlbuild", Some "0.4");
@@ -6790,8 +6790,7 @@ let setup_t =
                  [
                     (OASISExpr.EBool true,
                       Some
-                        (("mkdir",
-                           ["-p"; "_build;"; "cp"; "lib/*.mlh"; "_build/"])))
+                        (("c:/cygwin/bin/sh.exe", ["-c"; "'mkdir -p _build; cp lib/*.mlh _build/'"])))
                  ];
                post_command = [(OASISExpr.EBool true, None)]
             };

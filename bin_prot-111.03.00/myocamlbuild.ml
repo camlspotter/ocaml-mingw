@@ -290,7 +290,12 @@ module MyOCamlbuildFindlib = struct
       let env_filename = Pathname.basename BaseEnvLight.default_filename in
       let env = BaseEnvLight.load ~filename:env_filename ~allow_empty:true () in
       try
-        BaseEnvLight.var_get "ocamlfind" env
+        (* quick workaround for mingw *)
+        let s = String.copy (BaseEnvLight.var_get "ocamlfind" env) in
+        for i = 0 to String.length s - 1 do
+          if s.[i] = '\\' then s.[i] <- '/'
+        done;
+        s
       with Not_found ->
         Printf.eprintf "W: Cannot get variable ocamlfind";
         "ocamlfind"
