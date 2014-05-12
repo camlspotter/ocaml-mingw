@@ -6844,13 +6844,12 @@ let setup_t =
           conf_custom =
             {
                pre_command =
-                 [(OASISExpr.EBool true, Some (("config/detect.sh", [])))];
+                 [(OASISExpr.EBool true, Some (("c:/cygwin/bin/sh", ["config/detect.sh"])))];
                post_command =
                  [
                     (OASISExpr.EBool true,
                       Some
-                        (("config/discover.sh",
-                           ["$ocamlc"; "lib/config.mlh"; "lib/config.h"])))
+                        (("c:/cygwin/bin/sh", ["config/discover.sh"; "$ocamlc"; "lib/config.mlh"; "lib/config.h"])))
                  ]
             };
           build_type = (`Build, "ocamlbuild", Some "0.4");

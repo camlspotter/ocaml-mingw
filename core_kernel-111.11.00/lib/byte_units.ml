@@ -188,7 +188,7 @@ TEST_MODULE "{of,to}_string" = struct
   TEST = f (`Specific `Bytes)     "3k" "3072b"
   TEST = f (`Specific `Kilobytes) "3k" "3k"
   TEST = f (`Specific `Megabytes) "3k" "0.00292969m"
-  TEST = f (`Specific `Gigabytes) "3k" "2.86102e-06g"
+  TEST = f (`Specific `Gigabytes) "3k" (match Sys.os_type with |"Win32" -> "2.86102e-006g" | _ -> "2.86102e-06g")
   TEST = f (`Specific `Words)     "3k" (sprintf "%gw" ((3.0 *. kbyte) /. bytes_per_word))
 
 end

@@ -250,7 +250,7 @@ TEST = to_string_round_trippable 3.1400000000000001               = "3.14"
 TEST = to_string_round_trippable 3.1400000000000004               = "3.1400000000000006"
 TEST = to_string_round_trippable 8.000000000000002                = "8.0000000000000018"
 TEST = to_string_round_trippable 9.992                            = "9.992"
-TEST = to_string_round_trippable (2.**63. *. (1. +. 2.** (-52.))) = "9.2233720368547779e+18"
+TEST = to_string_round_trippable (2.**63. *. (1. +. 2.** (-52.))) = (match Sys.os_type with |"Win32" -> "9.2233720368547779e+018" | _ -> "9.2233720368547779e+18" )
 TEST = to_string_round_trippable (-3.)                            = "-3."
 TEST = to_string_round_trippable nan                              = "nan"
 TEST = to_string_round_trippable infinity                         = "inf"
