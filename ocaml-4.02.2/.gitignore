@@ -242,9 +242,9 @@
 /config/.depend
 /config/.depend.nt
 /config/.DS_Store
-/config/m.h
-/config/s.h
-/config/Makefile
+#/config/m.h
+#/config/s.h
+#/config/Makefile
 
 # /config/auto-aux/
 /config/auto-aux/*.o
@@ -2692,7 +2692,7 @@
 /tools/lexer299.ml
 /tools/ocaml299to3
 /tools/ocamlmklib
-/tools/ocamlmklibconfig.ml
+# /tools/ocamlmklibconfig.ml
 /tools/lexer301.ml
 /tools/scrapelabels
 /tools/addlabels

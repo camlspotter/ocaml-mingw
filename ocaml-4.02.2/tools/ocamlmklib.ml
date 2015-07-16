@@ -193,7 +193,7 @@ let command cmd =
   Sys.command cmd
 
 let scommand cmd =
-  if command cmd <> 0 then exit 2
+  if command cmd <> 0 then begin prerr_endline ("oops?!?!?!: " ^ cmd); exit 2 end
 
 let safe_remove s =
   try Sys.remove s with Sys_error _ -> ()
@@ -221,7 +221,8 @@ let prefix_list pref l =
 let prepostfix pre name post =
   let base = Filename.basename name in
   let dir = Filename.dirname name in
-  Filename.concat dir (pre ^ base ^ post)
+  (* Filename.concat dir (pre ^ base ^ post) *)
+  dir ^ "/" ^ (pre ^ base ^ post)
 ;;
 
 let transl_path s =
